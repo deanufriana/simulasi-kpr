@@ -7,8 +7,14 @@ import routes from "~react-pages";
 
 import { ThemeProvider } from "next-themes";
 
+import { Layout } from "./components/Layout";
+
 const App = () => {
-  return <Suspense fallback={<p>Loading...</p>}>{useRoutes(routes)}</Suspense>;
+  return (
+    <Layout>
+      <Suspense fallback={<p>Loading...</p>}>{useRoutes(routes)}</Suspense>
+    </Layout>
+  );
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
