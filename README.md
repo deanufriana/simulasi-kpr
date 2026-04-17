@@ -2,18 +2,21 @@
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-A modern, responsive Mortgage Calculator (Simulasi KPR) built with React and Vite. This application helps users estimate their monthly mortgage payments, taking into account both **fixed** and **floating** interest rates.
+A professional, high-performance Mortgage Calculator (Simulasi KPR) built with React and Vite. This application provides a comprehensive suite for financial planning, allowing users to simulate complex mortgage scenarios, check property affordability, and compare options side-by-side.
 
 ## ✨ Features
 
-- 📑 **Comprehensive Amortization Table**: View a detailed month-by-month breakdown of your installments, including interest and principal portions.
+- 💾 **Scenario Management**: Save multiple simulations to local storage with custom names.
+- 📊 **Side-by-Side Comparison**: Select and compare multiple saved scenarios in a tidy, interactive table to find the best deal.
+- 🏠 **Affordability Calculator**: "Cek Jangkauan" tool to estimate maximum property price based on debt-to-income (DTI) rules.
+- 📑 **Comprehensive Amortization Table**: View a detailed month-by-month breakdown of your installments.
 - 📉 **Dual Interest Rates**: Simulate scenarios with an initial fixed interest rate followed by a floating rate.
 - 🔢 **Real-time Calculations**: Instant updates as you modify loan amount, period, or interest rates.
-- 📱 **Fully Responsive**: Optimized for various screen sizes using Bootstrap 5.
-- 💵 **Currency Formatting**: Automatic IDR (Rupiah) formatting for easy reading.
+- 📥 **Excel Export**: Export full amortization tables to professional `.xlsx` files.
+- 🌓 **Dark Mode Support**: Premium, responsive UI with a modern aesthetic.
 - 🎥 **Integrated Guide**: Includes a helpful video guide to understand KPR concepts.
 
 ## 🚀 Getting Started
@@ -58,11 +61,13 @@ The output will be in the `dist` folder.
 
 ## 🛠️ Built With
 
-- **React** - UI Framework
-- **Vite** - Modern Frontend Build Tool
-- **Bootstrap 5** - Styling and Layout
-- **TypeScript** - Static Typing
-- **React Number Format** - Input formatting
+- **React 18** - UI Framework
+- **Vite** - High-speed build tool
+- **Tailwind CSS** - Utility-first styling
+- **shadcn/ui** - Premium UI components
+- **Framer Motion** - Smooth transitions and animations
+- **ExcelJS** - Professional spreadsheet generation
+- **TypeScript** - Type safety and reliability
 
 ## 📄 License
 

@@ -27,7 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Calculator, Calendar, Info, FileSpreadsheet } from "lucide-react";
+import { Calendar, Info, FileSpreadsheet, Plus, Trash2, Check, ArrowRightLeft, Save } from "lucide-react";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Button } from "@/components/ui/button";
@@ -50,25 +50,60 @@ interface Form {
   };
 }
 
+interface Scenario {
+  id: string;
+  name: string;
+  form: Form;
+  results: {
+    installment: number;
+    totalInterest: number;
+    totalPayment: number;
+  };
+}
+
 function Index () {
   const [page, setPage] = useState(1);
-  const [form, setForm] = useState<Form>({
-    per: "year",
-    pinjaman: {
-      jumlah: 500000000,
-      periode: 15,
-    },
-    bungaFix: {
-      percentage: 5.5,
-      periode: 3,
-      total: 0,
-    },
-    bungaFloating: {
-      percentage: 12,
-      periode: 12,
-      total: 0,
-    },
+  const [form, setForm] = useState<Form>(() => {
+    const saved = localStorage.getItem("kpr_simulator_form");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse saved form", e);
+      }
+    }
+    return {
+      per: "year",
+      pinjaman: {
+        jumlah: 500000000,
+        periode: 15,
+      },
+      bungaFix: {
+        percentage: 5.5,
+        periode: 3,
+        total: 0,
+      },
+      bungaFloating: {
+        percentage: 12,
+        periode: 12,
+        total: 0,
+      },
+    };
   });
+
+  // Save to localStorage whenever form changes
+  useEffect(() => {
+    localStorage.setItem("kpr_simulator_form", JSON.stringify(form));
+  }, [form]);
+
+  const [scenarios, setScenarios] = useState<Scenario[]>(() => {
+    const saved = localStorage.getItem("kpr_sim_scenarios");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [selectedScenarioIds, setSelectedScenarioIds] = useState<string[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [scenarioName, setScenarioName] = useState("");
 
   const [tableAngsuran, setTableAngsuran] = useState<
     {
@@ -132,6 +167,69 @@ function Index () {
 
     setForm({ ...customForm });
     setTimeout(() => tableAngsuranLoop(customForm), 0);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("kpr_sim_scenarios", JSON.stringify(scenarios));
+  }, [scenarios]);
+
+  const handleReset = () => {
+    const defaultForm = {
+      per: "year",
+      pinjaman: {
+        jumlah: 500000000,
+        periode: 15,
+      },
+      bungaFix: {
+        percentage: 5.5,
+        periode: 3,
+        total: 0,
+      },
+      bungaFloating: {
+        percentage: 12,
+        periode: 12,
+        total: 0,
+      },
+    };
+    setForm(defaultForm);
+    localStorage.removeItem("kpr_simulator_form");
+    tableAngsuranLoop(defaultForm);
+  };
+
+  const handleSaveScenario = () => {
+    if (!scenarioName.trim()) return;
+
+    const newScenario: Scenario = {
+      id: crypto.randomUUID(),
+      name: scenarioName,
+      form: JSON.parse(JSON.stringify(form)),
+      results: {
+        installment: tableAngsuran[0]?.jumlahAngsuran || 0,
+        totalInterest: totalBungaYangDibayar,
+        totalPayment: totalBayar,
+      }
+    };
+
+    setScenarios([...scenarios, newScenario]);
+    setScenarioName("");
+    setIsSaving(false);
+  };
+
+  const handleLoadScenario = (scenario: Scenario) => {
+    setForm(scenario.form);
+    setTimeout(() => tableAngsuranLoop(scenario.form), 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDeleteScenario = (id: string) => {
+    setScenarios(scenarios.filter(s => s.id !== id));
+    setSelectedScenarioIds(selectedScenarioIds.filter(sid => sid !== id));
+  };
+
+  const toggleComparison = (id: string) => {
+    setSelectedScenarioIds(prev =>
+      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]
+    );
   };
 
   const tableAngsuranLoop = (currentForm = form) => {
@@ -276,9 +374,153 @@ function Index () {
   };
 
   return (
-    <div className="container py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div className="container py-12 space-y-6">
+      {/* Saved Scenarios & Comparison Section */}
+      <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h2 className="text-3xl font-bold tracking-tight">Skenario Tersimpan</h2>
+            <p className="text-sm text-muted-foreground">Bandingkan berbagai pilihan KPR untuk menemukan yang terbaik.</p>
+          </div>
+          {scenarios.length > 0 && (
+            <div className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 self-start">
+              {scenarios.length} Skenario
+            </div>
+          )}
+        </div>
 
+        {scenarios.length === 0 ? (
+          <Card className="border-dashed shadow-none py-12 flex flex-col items-center justify-center text-center space-y-4 bg-slate-50/20 dark:bg-slate-900/10">
+            <div className="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+              <Plus className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <div className="space-y-1">
+              <p className="font-bold">Belum ada skenario</p>
+              <p className="text-xs text-muted-foreground">Klik tombol "Simpan" di bagian jadwal angsuran untuk menyimpan simulasi.</p>
+            </div>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {scenarios.map((s) => (
+              <Card
+                key={s.id}
+                className={`group shadow-none relative overflow-hidden transition-all hover:ring-2 hover:ring-primary/50 cursor-pointer ${selectedScenarioIds.includes(s.id) ? 'ring-2 ring-primary border-primary/50' : 'border-slate-200 dark:border-slate-800'}`}
+                onClick={() => handleLoadScenario(s)}
+              >
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-1">
+                      <CardTitle className="text-sm font-bold truncate max-w-[150px]">{s.name}</CardTitle>
+                      <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                        {formatter.format(s.form.pinjaman.jumlah)} • {s.form.pinjaman.periode} {s.form.per === "year" ? "Thn" : "Bln"}
+                      </p>
+                    </div>
+                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={`h-7 w-7 ${selectedScenarioIds.includes(s.id) ? 'text-primary' : 'text-slate-400'}`}
+                        onClick={(e) => { e.stopPropagation(); toggleComparison(s.id); }}
+                      >
+                        <ArrowRightLeft className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-slate-400 hover:text-destructive"
+                        onClick={(e) => { e.stopPropagation(); handleDeleteScenario(s.id); }}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-lg font-bold text-primary">{formatter.format(s.results.installment)}</p>
+                  <p className="text-[10px] text-muted-foreground font-medium">Angsuran / Bulan</p>
+                </CardContent>
+                {selectedScenarioIds.includes(s.id) && (
+                  <div className="absolute top-0 right-0 p-1">
+                    <div className="bg-primary text-primary-foreground rounded-bl-lg p-0.5">
+                      <Check className="h-3 w-3" />
+                    </div>
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {selectedScenarioIds.length > 1 && (
+          <div className="space-y-6 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                <ArrowRightLeft className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold tracking-tight">Perbandingan Skenario</h3>
+                <p className="text-sm text-muted-foreground">Analisis perbedaan antara pilihan KPR yang Anda pilih.</p>
+              </div>
+            </div>
+
+            <Card className="border shadow-sm overflow-hidden bg-white dark:bg-slate-950">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader className="bg-slate-50/80 dark:bg-slate-900/80">
+                    <TableRow>
+                      <TableHead className="w-[220px] text-xs font-bold uppercase tracking-widest px-6 py-4 text-slate-500">Metrik Utama</TableHead>
+                      {scenarios.filter(s => selectedScenarioIds.includes(s.id)).map(s => (
+                        <TableHead key={s.id} className="text-center text-xs font-bold uppercase tracking-widest px-6 py-4">{s.name}</TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow className="hover:bg-transparent border-slate-100 dark:border-slate-800">
+                      <TableCell className="font-semibold text-slate-600 dark:text-slate-400 text-sm px-6 py-5">Cicilan Bulanan</TableCell>
+                      {scenarios.filter(s => selectedScenarioIds.includes(s.id)).map(s => (
+                        <TableCell key={s.id} className="text-center font-bold text-primary text-base px-6 py-5">{formatter.format(s.results.installment)}</TableCell>
+                      ))}
+                    </TableRow>
+                    <TableRow className="hover:bg-transparent border-slate-100 dark:border-slate-800">
+                      <TableCell className="font-semibold text-slate-600 dark:text-slate-400 text-sm px-6 py-5">Total Bunga</TableCell>
+                      {scenarios.filter(s => selectedScenarioIds.includes(s.id)).map(s => (
+                        <TableCell key={s.id} className="text-center font-semibold text-amber-600 dark:text-amber-500 text-sm px-6 py-5">{formatter.format(s.results.totalInterest)}</TableCell>
+                      ))}
+                    </TableRow>
+                    <TableRow className="hover:bg-transparent border-slate-100 dark:border-slate-800">
+                      <TableCell className="font-semibold text-slate-600 dark:text-slate-400 text-sm px-6 py-5">Total Pembayaran</TableCell>
+                      {scenarios.filter(s => selectedScenarioIds.includes(s.id)).map(s => (
+                        <TableCell key={s.id} className="text-center font-bold text-slate-900 dark:text-slate-50 text-base px-6 py-5">{formatter.format(s.results.totalPayment)}</TableCell>
+                      ))}
+                    </TableRow>
+                    <TableRow className="bg-slate-50/30 dark:bg-slate-900/20 hover:bg-slate-50/50 dark:hover:bg-slate-900/40">
+                      <TableCell className="font-bold text-slate-900 dark:text-slate-50 text-sm px-6 py-6 border-none">Selisih Hemat</TableCell>
+                      {scenarios.filter(s => selectedScenarioIds.includes(s.id)).map(s => {
+                        const maxPayment = Math.max(...scenarios.filter(sub => selectedScenarioIds.includes(sub.id)).map(sub => sub.results.totalPayment));
+                        const diff = maxPayment - s.results.totalPayment;
+                        return (
+                          <TableCell key={s.id} className="text-center px-6 py-6 border-none">
+                            {diff > 0 ? (
+                              <div className="inline-flex flex-col items-center">
+                                <span className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400 tracking-tighter mb-0.5 whitespace-nowrap">Potensi Hemat</span>
+                                <span className="font-bold text-emerald-600 dark:text-emerald-400 text-lg leading-none">{formatter.format(diff)}</span>
+                              </div>
+                            ) : (
+                              <span className="text-muted-foreground/30 font-bold">—</span>
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </Card>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
         {/* Left Column: Form Inputs */}
         <div className="lg:col-span-8 space-y-8">
           <Card className="border shadow-none bg-slate-50/40 dark:bg-slate-900/40">
@@ -414,7 +656,43 @@ function Index () {
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <h2 className="text-xl font-bold tracking-tight">Jadwal Angsuran</h2>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                {isSaving ? (
+                  <div className="flex items-center gap-2 animate-in slide-in-from-right-2 duration-300">
+                    <Input
+                      className="h-8 w-40 text-[10px] font-bold uppercase"
+                      placeholder="Nama Skenario..."
+                      value={scenarioName}
+                      onChange={(e) => setScenarioName(e.target.value)}
+                      autoFocus
+                      onKeyDown={(e) => e.key === 'Enter' && handleSaveScenario()}
+                    />
+                    <Button size="sm" className="h-8 px-2" onClick={handleSaveScenario}>
+                      <Check className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-8 px-2" onClick={() => setIsSaving(false)}>
+                      Batal
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 text-[10px] font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors gap-2"
+                    onClick={() => setIsSaving(true)}
+                  >
+                    <Save className="h-3 w-3" />
+                    Simpan
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-destructive transition-colors"
+                  onClick={handleReset}
+                >
+                  Atur Ulang
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
@@ -424,7 +702,7 @@ function Index () {
                   <FileSpreadsheet className="h-3.5 w-3.5" />
                   Ekspor Excel
                 </Button>
-                <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em]">
+                <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] ml-2">
                   {tableAngsuran.length} Periode
                 </div>
               </div>
