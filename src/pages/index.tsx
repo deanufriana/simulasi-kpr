@@ -317,60 +317,139 @@ function Index () {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Simulasi KPR");
 
+    // Styling helpers
+    const headerFill: ExcelJS.Fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF0F172A" } };
+    const headerFont: Partial<ExcelJS.Font> = { bold: true, color: { argb: "FFFFFFFF" } };
+    const labelFont: Partial<ExcelJS.Font> = { bold: true };
+    const currencyFmt = '"Rp"# ,##0';
+    const percentFmt = '0.00"%"';
+
+    // Title
     worksheet.mergeCells("A1:E1");
     const titleCell = worksheet.getCell("A1");
-    titleCell.value = "SIMULASI KPR MODERN";
+    titleCell.value = "SIMULASI KPR MODERN (SMART SPREADSHEET)";
     titleCell.font = { name: "Inter", size: 16, bold: true };
     titleCell.alignment = { horizontal: "center" };
 
-    worksheet.addRow(["Detail Pinjaman"]);
-    worksheet.getCell(`A${worksheet.lastRow!.number}`).font = { bold: true };
+    // --- SECTION 1: INPUTS ---
+    worksheet.addRow(["INPUT DATA PINJAMAN (Dapat diubah)"]);
+    worksheet.getCell("A2").font = { bold: true, size: 12 };
 
-    worksheet.addRow(["Plafon Pinjaman", form.pinjaman.jumlah]);
-    worksheet.addRow(["Tenor", `${form.pinjaman.periode} ${form.per === "year" ? "Tahun" : "Bulan"}`]);
-    worksheet.addRow(["Total Bunga", totalBungaYangDibayar]);
-    worksheet.addRow(["Total Pembayaran", totalBayar]);
+    const inputData = [
+      ["Plafon Pinjaman", form.pinjaman.jumlah, currencyFmt],
+      ["Tenor Total (Bulan)", yearToMonth({ ...form.pinjaman, per: form.per }), "0"],
+      ["Suku Bunga Fixed (%)", form.bungaFix.percentage / 100, percentFmt],
+      ["Masa Fixed (Bulan)", yearToMonth({ ...form.bungaFix, per: form.per }), "0"],
+      ["Suku Bunga Floating (%)", form.bungaFloating.percentage / 100, percentFmt],
+    ];
 
-    const summaryRows = [3, 5, 6];
-    summaryRows.forEach(rowIdx => {
-      worksheet.getRow(rowIdx).getCell(2).numFmt = '"Rp"# ,##0';
+    inputData.forEach((data, idx) => {
+      const row = worksheet.addRow([data[0], data[1]]);
+      const valueCell = row.getCell(2);
+      valueCell.numFmt = data[2] as string;
+      valueCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF1F5F9" } }; // Light blue for inputs
+      valueCell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
+      row.getCell(1).font = labelFont;
     });
+
+    // --- SECTION 2: HIDDEN CALCULATIONS ---
+    // Using columns H and I for logic. This makes formulas cleaner and more manageable.
+    worksheet.getCell("H4").value = "Angsuran Fix";
+    worksheet.getCell("I4").value = { formula: "ROUND(PMT(B5/12, B4, -B3), 0)" };
+
+    worksheet.getCell("H5").value = "Saldo Akhir Fix";
+    worksheet.getCell("I5").value = { formula: "ROUND(FV(B5/12, B6, I4, -B3), 0)" };
+
+    worksheet.getCell("H6").value = "Angsuran Floating";
+    worksheet.getCell("I6").value = { formula: "ROUND(PMT(B7/12, B4-B6, -I5), 0)" };
+
+    worksheet.getColumn("H").hidden = true;
+    worksheet.getColumn("I").hidden = true;
+
+    // --- SECTION 3: SUMMARY ---
+    worksheet.addRow([]);
+    worksheet.addRow(["RINGKASAN ESTIMASI"]);
+    worksheet.getCell(`A${worksheet.lastRow!.number}`).font = { bold: true, size: 12 };
+
+    // Total Bunga
+    const bungaSumRow = worksheet.addRow(["Total Bunga"]);
+    // Dynamic sum based on the expected table length
+    bungaSumRow.getCell(2).value = { formula: `SUM(C15:C${14 + tableAngsuran.length})` }; // Column C is Bunga
+    bungaSumRow.getCell(2).numFmt = currencyFmt;
+
+    // Total Pembayaran
+    const totalPayRow = worksheet.addRow(["Total Pembayaran"]);
+    totalPayRow.getCell(2).value = { formula: "B3 + B10" };
+    totalPayRow.getCell(2).numFmt = currencyFmt;
+    totalPayRow.getCell(2).font = { bold: true, color: { argb: "FF2563EB" } };
+
+    // Quick Ratio: Bunga vs Pokok
+    const ratioRow = worksheet.addRow(["Rasio Bunga terhadap Pokok"]);
+    ratioRow.getCell(2).value = { formula: "B10 / B3" };
+    ratioRow.getCell(2).numFmt = '0.0%';
+    ratioRow.getCell(2).font = { italic: true, color: { argb: "FF64748B" } };
 
     worksheet.addRow([]);
 
-    const headerRow = worksheet.addRow(["Bulan", "Angsuran", "Pokok", "Bunga", "Sisa Pinjaman"]);
-    headerRow.font = { bold: true, color: { argb: "FFFFFFFF" } };
+    // --- SECTION 4: AMORTIZATION TABLE ---
+    const headerRow = worksheet.addRow(["Bulan", "Angsuran", "Bunga", "Pokok", "Sisa Pinjaman"]);
     headerRow.eachCell((cell) => {
-      cell.fill = {
-        type: "pattern",
-        pattern: "solid",
-        fgColor: { argb: "FF0F172A" }
-      };
+      cell.fill = headerFill;
+      cell.font = headerFont;
       cell.alignment = { horizontal: "center" };
     });
 
-    tableAngsuran.forEach((item) => {
+    tableAngsuran.forEach((item, index) => {
+      const rowIdx = worksheet.lastRow!.number + 1;
+      const prevSaldoRef = index === 0 ? "B3" : `E${rowIdx - 1}`;
+
       const row = worksheet.addRow([
-        item.atMonth,
-        item.jumlahAngsuran,
-        item.angsuranPokok,
-        item.angsuranBunga,
-        item.saldoPokok
+        item.atMonth, // A: Bulan
+        { formula: `IF(A${rowIdx}<=$B$6, $I$4, $I$6)` }, // B: Angsuran
+        { formula: `ROUND(${prevSaldoRef} * (IF(A${rowIdx}<=$B$6, $B$5, $B$7) / 12), 0)` }, // C: Bunga
+        { formula: `B${rowIdx} - C${rowIdx}` }, // D: Pokok
+        { formula: `ROUND(${prevSaldoRef} - D${rowIdx}, 0)` } // E: Sisa
       ]);
 
       [2, 3, 4, 5].forEach(colIdx => {
-        row.getCell(colIdx).numFmt = '"Rp"# ,##0';
+        row.getCell(colIdx).numFmt = currencyFmt;
       });
       row.getCell(1).alignment = { horizontal: "center" };
+      row.getCell(1).font = { bold: true, color: { argb: "FF64748B" } };
     });
 
-    worksheet.columns.forEach((column) => {
-      column.width = 18;
+    // Formatting: Highlight the Transition Month
+    const fixPeriod = yearToMonth({ ...form.bungaFix, per: form.per });
+    if (fixPeriod > 0 && fixPeriod < tableAngsuran.length) {
+      const row = worksheet.getRow(14 + fixPeriod);
+      row.eachCell(cell => {
+        cell.border = { bottom: { style: 'medium', color: { argb: 'FF3B82F6' } } };
+      });
+    }
+
+    // Set Column Widths
+    worksheet.getColumn("A").width = 10;
+    worksheet.getColumn("B").width = 22;
+    worksheet.getColumn("C").width = 22;
+    worksheet.getColumn("D").width = 22;
+    worksheet.getColumn("E").width = 25;
+
+    // Add Conditional Formatting for Sisa Pinjaman (Color Scale)
+    worksheet.addConditionalFormatting({
+      ref: `E15:E${14 + tableAngsuran.length}`,
+      rules: [
+        {
+          priority: 1,
+          type: 'colorScale',
+          cfvo: [{ type: 'min' }, { type: 'max' }],
+          color: [{ argb: 'FFFFF1F2' }, { argb: 'FFECFDF5' }]
+        }
+      ]
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-    saveAs(blob, `Simulasi_KPR_${new Date().toISOString().split('T')[0]}.xlsx`);
+    saveAs(blob, `Smart_KPR_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
   return (
@@ -654,9 +733,9 @@ function Index () {
           </Card>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
+            <div className="flex items-center justify-between px-1 flex-wrap gap-4">
               <h2 className="text-xl font-bold tracking-tight">Jadwal Angsuran</h2>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 {isSaving ? (
                   <div className="flex items-center gap-2 animate-in slide-in-from-right-2 duration-300">
                     <Input
