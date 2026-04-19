@@ -1,9 +1,9 @@
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
-export function Loader() {
+export function Loader () {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm">
+    <div className="w-full flex-1 min-h-[400px] flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}

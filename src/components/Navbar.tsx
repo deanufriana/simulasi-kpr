@@ -19,6 +19,7 @@ export function Navbar() {
     { name: "Cek Jangkauan", href: "/jangkauan" },
     { name: "Tentang KPR", href: "/tentang-kpr" },
     { name: "Panduan", href: "/panduan" },
+    { name: "Tentang Aplikasi", href: "/tentang" },
   ];
 
   return (
