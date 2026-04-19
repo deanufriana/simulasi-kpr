@@ -169,7 +169,7 @@ export function Footer() {
             </a>
           </div>
           <div className="flex gap-6 items-center">
-            <span className="font-bold">v1.2.0</span>
+            <span className="font-bold">v{APP_VERSION}</span>
             <span className="hidden sm:inline w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
             <span className="font-bold">Jakarta, Indonesia</span>
           </div>
