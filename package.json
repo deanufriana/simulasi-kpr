@@ -1,14 +1,12 @@
 {
   "name": "simulasi-kpr",
-  "private": true,
   "version": "1.1.1",
+  "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "engines": {
-    "node": ">=22"
+    "dev": "vp dev",
+    "build": "tsc && vp build",
+    "preview": "vp preview",
+    "prepare": "vp config"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",
@@ -16,8 +14,6 @@
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "exceljs": "^4.4.0",
-    "file-saver": "^2.0.5",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "next-themes": "^0.4.6",
@@ -28,10 +24,10 @@
     "react-router": "^7.14.1",
     "react-router-dom": "^7.14.1",
     "tailwind-merge": "^3.5.0",
-    "vite-plugin-pages": "^0.33.3"
+    "vite-plugin-pages": "^0.33.3",
+    "write-excel-file": "^4.1.1"
   },
   "devDependencies": {
-    "@types/file-saver": "^2.0.7",
     "@types/node": "^25.6.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
@@ -41,6 +37,13 @@
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^6.0.3",
-    "vite": "^8.0.8"
+    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000",
+    "vite-plus": "1.7.0"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

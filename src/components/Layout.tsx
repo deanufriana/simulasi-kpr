@@ -8,9 +8,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Navbar />
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1 overflow-x-clip">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}

@@ -1,4 +1,4 @@
-import { Calculator, ExternalLink, Heart } from "lucide-react";
+import { Calculator, ExternalLink } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 const Github = (props: React.SVGProps<SVGSVGElement>) => (
@@ -45,26 +45,26 @@ export function Footer() {
     {
       name: "Résumé Lab",
       url: "https://deanufriana.github.io/resume-lab/",
-      description: "Platform pembuat CV profesional dengan optimasi ATS."
+      description: "Platform pembuat CV profesional dengan optimasi ATS.",
     },
     {
       name: "Sistem Skripsi",
       url: "https://github.com/deanufriana/sistem_skripsi",
-      description: "Sistem manajemen skripsi online terpadu."
-    }
+      description: "Sistem manajemen skripsi online terpadu.",
+    },
   ];
 
   const socialLinks = [
     {
       name: "GitHub",
       url: "https://github.com/deanufriana",
-      icon: Github
+      icon: Github,
     },
     {
       name: "LinkedIn",
       url: "https://www.linkedin.com/in/deanufriana",
-      icon: Linkedin
-    }
+      icon: Linkedin,
+    },
   ];
 
   const handleLinkClick = (url: string, name: string) => {
@@ -72,48 +72,45 @@ export function Footer() {
   };
 
   return (
-    <footer className="border-t bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-md py-12 mt-20 relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 blur-3xl rounded-full pointer-events-none"></div>
-      
-      <div className="container relative z-10 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+    <footer className="border-t bg-card/60 py-10 mt-20">
+      <div className="container px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
           {/* Brand & Summary */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 group cursor-default">
-              <div className="w-8 h-8 rounded bg-primary flex items-center justify-center transition-transform group-hover:rotate-12">
-                <Calculator className="w-5 h-5 text-primary-foreground" />
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+                <Calculator className="w-4 h-4 text-primary-foreground" aria-hidden="true" />
               </div>
-              <span className="font-bold text-xl tracking-tight">Simulasi KPR</span>
+              <span className="font-bold text-lg tracking-tight">Simulasi KPR</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
-              Membantu Anda merencanakan pembiayaan hunian impian dengan kalkulasi transparan dan akurat.
+              Alat bantu perencanaan KPR dengan rincian cicilan fixed dan floating yang transparan.
             </p>
-            <div className="flex items-center gap-4 pt-2">
+            <div className="flex items-center gap-2 pt-1">
               {socialLinks.map((social) => (
-                <a 
+                <a
                   key={social.name}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors p-2 hover:bg-primary/10 rounded-full"
+                  className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-muted rounded-full"
                   onClick={() => handleLinkClick(social.url, social.name)}
                   aria-label={social.name}
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="w-4 h-4" aria-hidden="true" />
                 </a>
               ))}
             </div>
           </div>
 
           {/* Other Apps */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-sm uppercase tracking-wider text-foreground">Aplikasi Lainnya</h3>
+          <div className="space-y-3">
+            <h3 className="font-semibold text-sm text-foreground">Aplikasi Lainnya</h3>
             <ul className="space-y-3">
               {otherApps.map((app) => (
                 <li key={app.name}>
-                  <a 
-                    href={app.url} 
+                  <a
+                    href={app.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex flex-col gap-0.5"
@@ -121,57 +118,52 @@ export function Footer() {
                   >
                     <div className="flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors group-hover:text-primary">
                       {app.name}
-                      <ExternalLink className="w-3 h-3 opacity-0 -translate-y-1 translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0" />
+                      <ExternalLink
+                        className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-hidden="true"
+                      />
                     </div>
-                    <span className="text-xs text-muted-foreground truncate max-w-[250px]">{app.description}</span>
+                    <span className="text-xs text-muted-foreground truncate max-w-[260px]">
+                      {app.description}
+                    </span>
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Quick Info */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-sm uppercase tracking-wider text-foreground">Built With</h3>
-            <div className="flex flex-wrap gap-2">
-              {['React', 'TypeScript', 'Tailwind', 'Shadcn UI', 'ExcelJS'].map((tech) => (
-                <span key={tech}
-                  className="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-[10px] font-semibold text-muted-foreground border border-border/50 uppercase tracking-tight shadow-sm"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-            <div className="pt-4 flex flex-col gap-2">
-              <p className="text-xs text-muted-foreground">
-                Butuh solusi kustom atau kolaborasi?
-              </p>
-              <a href="mailto:devi.nufriana@gmail.com" className="text-sm font-semibold text-primary hover:underline group inline-flex items-center">
-                Hubungi saya <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
-              </a>
-            </div>
+          {/* Contact */}
+          <div className="space-y-3">
+            <h3 className="font-semibold text-sm text-foreground">Kontak</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-xs">
+              Punya masukan atau butuh solusi kustom?
+            </p>
+            <a
+              href="mailto:devi.nufriana@gmail.com"
+              className="text-sm font-semibold text-primary hover:underline inline-block"
+            >
+              devi.nufriana@gmail.com
+            </a>
           </div>
         </div>
 
         {/* Copyright Area */}
-        <div className="pt-8 border-t border-border/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
-          <div className="flex items-center gap-1.5 select-none">
-            <span>&copy; {currentYear} Simulasi KPR. Created with</span>
-            <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" />
-            <span>by</span>
-            <a 
-              href="https://github.com/deanufriana" 
-              target="_blank" 
+        <div className="pt-6 border-t border-border/60 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1.5">
+            <span>&copy; {currentYear} Simulasi KPR. Dibuat oleh</span>
+            <a
+              href="https://github.com/deanufriana"
+              target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+              className="font-medium text-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
             >
               deanufriana
             </a>
           </div>
-          <div className="flex gap-6 items-center">
-            <span className="font-bold">v{APP_VERSION}</span>
-            <span className="hidden sm:inline w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
-            <span className="font-bold">Jakarta, Indonesia</span>
+          <div className="flex gap-4 items-center">
+            <span>v{APP_VERSION}</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Jakarta, Indonesia</span>
           </div>
         </div>
       </div>

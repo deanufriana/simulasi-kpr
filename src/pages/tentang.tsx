@@ -1,12 +1,4 @@
-import {
-  FileText,
-  Mail,
-  Sparkles,
-  Rocket,
-  ExternalLink,
-  Laptop,
-  CheckCircle2,
-} from "lucide-react";
+import { FileText, Mail, ExternalLink, Laptop, CheckCircle2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
@@ -42,31 +34,23 @@ export default function Tentang() {
   return (
     <div className="container py-12 space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* Hero / Vision Section */}
-      <section className="max-w-4xl mx-auto text-center space-y-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider mb-2">
-          <Sparkles className="w-3.5 h-3.5" />
-          Visi Kami
-        </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-slate-50">
-          Menyederhanakan Perencanaan
-          <span className="block bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
-            Keuangan untuk Semua Orang
-          </span>
+      <section className="max-w-4xl mx-auto space-y-4">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+          Menyederhanakan Perencanaan Keuangan KPR
         </h1>
-        <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-          Simulasi KPR dibangun dengan tujuan sederhana: menyediakan alat yang transparan dan mudah digunakan bagi pembeli rumah di Indonesia untuk memahami komitmen KPR mereka tanpa kerumitan.
+        <p className="text-base text-muted-foreground leading-relaxed max-w-2xl">
+          Simulasi KPR dibangun dengan tujuan sederhana: menyediakan alat yang transparan dan mudah
+          digunakan bagi pembeli rumah di Indonesia untuk memahami komitmen KPR mereka tanpa
+          kerumitan.
         </p>
       </section>
 
       {/* Projects Section --> My Other Apps */}
-      <section className="max-w-4xl mx-auto space-y-8">
-        <div className="space-y-2 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-widest">
-            <Rocket className="w-4 h-4" /> Portofolio
-          </div>
-          <h2 className="text-3xl font-bold">Aplikasi Lainnya</h2>
-          <p className="text-muted-foreground">
-            Lihat beberapa proyek dan alat menarik lainnya yang telah saya kembangkan.
+      <section className="max-w-4xl mx-auto space-y-6">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-bold">Aplikasi Lainnya</h2>
+          <p className="text-sm text-muted-foreground">
+            Proyek dan alat bantu lain yang telah saya kembangkan.
           </p>
         </div>
 
@@ -83,9 +67,7 @@ export default function Tentang() {
                 <div className="md:w-2/3 p-6 flex flex-col justify-between">
                   <div>
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-bold tracking-tight">
-                        {app.name}
-                      </h3>
+                      <h3 className="text-xl font-bold tracking-tight">{app.name}</h3>
                       <a
                         href={app.url}
                         target="_blank"
@@ -120,9 +102,7 @@ export default function Tentang() {
         <Card className="bg-primary text-primary-foreground border-none shadow-2xl">
           <CardContent className="p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center md:text-left">
-              <h3 className="text-2xl font-bold">
-                Tertarik untuk Berkolaborasi?
-              </h3>
+              <h3 className="text-2xl font-bold">Tertarik untuk Berkolaborasi?</h3>
               <p className="text-primary-foreground/80">
                 Saya selalu terbuka untuk mendiskusikan proyek baru atau ide kreatif lainnya.
               </p>
@@ -157,7 +137,8 @@ export default function Tentang() {
             </div>
             <h4 className="font-bold text-lg">Akurasi & Transparansi</h4>
             <p className="text-sm text-muted-foreground">
-              Banyak kalkulator KPR di luar sana yang tidak transparan mengenai biaya bunga floating. Simulasi KPR memberikan rincian lengkap hingga akhir masa tenor.
+              Banyak kalkulator KPR di luar sana yang tidak transparan mengenai biaya bunga
+              floating. Simulasi KPR memberikan rincian lengkap hingga akhir masa tenor.
             </p>
           </div>
           <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border space-y-4">
@@ -166,7 +147,8 @@ export default function Tentang() {
             </div>
             <h4 className="font-bold text-lg">Utamakan Pengalaman Pengguna</h4>
             <p className="text-sm text-muted-foreground">
-              Dibangun dengan teknologi modern (React & Vite), aplikasi ini bukan hanya sekadar alat finansial, tetapi juga contoh implementasi UI/UX yang responsif dan cepat.
+              Dibangun dengan teknologi modern (React & Vite), aplikasi ini bukan hanya sekadar alat
+              finansial, tetapi juga contoh implementasi UI/UX yang responsif dan cepat.
             </p>
           </div>
         </div>

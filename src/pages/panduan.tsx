@@ -1,81 +1,166 @@
 import { Card } from "@/components/ui/card";
-import { BookOpen, TrendingUp, Lightbulb } from "lucide-react";
+import { TrendingUp, Lightbulb, ClipboardCheck, CheckCircle2, ShieldCheck } from "lucide-react";
 
-export default function Panduan () {
-    return (
-        <section className="container py-12 md:py-12">
-            <div className="max-w-4xl mx-auto space-y-12">
-                <div className="space-y-4 text-center">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest">
-                        <BookOpen className="h-3 w-3" />
-                        Edukasi KPR
-                    </div>
-                    <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Apa itu Simulasi KPR?</h1>
-                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
-                        Pelajari dasar-dasar Kredit Pemilikan Rumah untuk membantu Anda merencanakan masa depan hunian dengan lebih matang.
-                    </p>
-                </div>
+export default function Panduan() {
+  return (
+    <section className="container py-12">
+      <div className="max-w-5xl mx-auto space-y-14">
+        <div className="space-y-2 max-w-2xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Memahami KPR Sebelum Akad
+          </h1>
+          <p className="text-muted-foreground text-base leading-relaxed">
+            Ringkasan praktis mengenai cara kerja KPR, perbedaan bunga fixed &amp; floating, serta
+            syarat umum pengajuan di Indonesia.
+          </p>
+        </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
-                    {/* Fixed vs Floating Article */}
-                    <Card className="border shadow-none bg-white dark:bg-slate-950 p-6 space-y-4">
-                        <div className="h-10 w-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center">
-                            <TrendingUp className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                        </div>
-                        <h3 className="text-xl font-bold">Fixed vs. Floating Rate</h3>
-                        <div className="space-y-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                            <p>
-                                <span className="font-bold text-slate-900 dark:text-slate-100">Fixed Rate (Bunga Tetap)</span> adalah suku bunga yang dipatok pada angka tertentu selama periode awal (misal 3-5 tahun). Cicilan Anda tidak akan berubah selama masa ini, memberikan kepastian finansial.
-                            </p>
-                            <p>
-                                <span className="font-bold text-slate-900 dark:text-slate-100">Floating Rate (Bunga Mengambang)</span> berlaku setelah masa fixed berakhir. Suku bunga akan naik-turun mengikuti suku bunga pasar (BI Rate). Di sinilah pentingnya antisipasi karena cicilan bisa naik sewaktu-waktu.
-                            </p>
-                        </div>
-                    </Card>
-
-                    {/* Suku Bunga Hybrid */}
-                    <Card className="border shadow-none bg-white dark:bg-slate-950 p-6 space-y-4">
-                        <div className="h-10 w-10 rounded-lg bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center">
-                            <Lightbulb className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                        </div>
-                        <h3 className="text-xl font-bold">Masa Transisi (Hybrid)</h3>
-                        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                            Hampir semua bank di Indonesia menggunakan skema hybrid. Anda mendapatkan bunga rendah di awal sebagai promo, namun harus siap dengan "kejutan" saat memasuki masa floating. Kalkulator ini membantu Anda melihat skenario terburuk agar Anda tidak mengalami <span className="italic font-medium">KPR Shock</span>.
-                        </p>
-                    </Card>
-                </div>
-
-                <Card className="border-none shadow-none bg-slate-900 text-slate-50 p-8 sm:p-12 relative overflow-hidden">
-                    <div className="relative z-10 space-y-6">
-                        <h3 className="text-2xl font-bold">Tips Cerdas Mengambil KPR</h3>
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm opacity-80 leading-loose">
-                            <li className="flex gap-3">
-                                <div className="mt-1 h-5 w-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">1</div>
-                                Gunakan suku bunga floating yang lebih tinggi (misal 12-14%) dalam simulasi untuk melihat batas maksimal kemampuan bayar Anda.
-                            </li>
-                            <li className="flex gap-3">
-                                <div className="mt-1 h-5 w-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">2</div>
-                                Pastikan total cicilan tidak melebihi 30-35% dari pendapatan bersih bulanan Anda untuk menghindari gagal bayar.
-                            </li>
-                            <li className="flex gap-3">
-                                <div className="mt-1 h-5 w-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">3</div>
-                                Siapkan dana darurat setara 6-12 kali cicilan bulanan sebelum memutuskan untuk akad KPR.
-                            </li>
-                            <li className="flex gap-3">
-                                <div className="mt-1 h-5 w-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">4</div>
-                                Lakukan review berkala terhadap suku bunga floating Anda dan pertimbangkan "take over" jika ada penawaran bank lain yang jauh lebih rendah.
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-primary rounded-full blur-[100px] opacity-20"></div>
-                </Card>
-
-                <div className="text-center pt-8">
-                    <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">
-                        Dibuat untuk membantu perencanaan finansial Anda
-                    </p>
-                </div>
+        {/* Fixed vs Floating & Hybrid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="border shadow-sm bg-card p-6 space-y-4">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <TrendingUp className="h-5 w-5 text-primary" aria-hidden="true" />
             </div>
-        </section>
-    );
+            <h2 className="text-xl font-bold">Fixed vs. Floating Rate</h2>
+            <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+              <p>
+                <strong className="text-foreground">Fixed Rate (Bunga Tetap)</strong> dipatok pada
+                angka promo di tahun-tahun awal (misalnya 3–5 tahun). Cicilan Anda stabil selama
+                periode ini.
+              </p>
+              <p>
+                <strong className="text-foreground">Floating Rate (Bunga Mengambang)</strong>{" "}
+                berlaku setelah masa fixed berakhir dan mengikuti suku bunga pasar. Di sinilah
+                cicilan berpotensi naik.
+              </p>
+            </div>
+          </Card>
+
+          <Card className="border shadow-sm bg-card p-6 space-y-4">
+            <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+              <Lightbulb
+                className="h-5 w-5 text-amber-600 dark:text-amber-400"
+                aria-hidden="true"
+              />
+            </div>
+            <h2 className="text-xl font-bold">Antisipasi &ldquo;KPR Shock&rdquo;</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Hampir semua KPR konvensional menggunakan skema hybrid (Fixed lalu Floating). Selalu
+              uji simulasi dengan bunga floating tinggi (11–13%) agar Anda siap ketika masa promo
+              berakhir, atau pertimbangkan KPR Syariah jika menginginkan cicilan tetap hingga lunas.
+            </p>
+          </Card>
+        </div>
+
+        {/* Alur & Persyaratan */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <div className="lg:col-span-2 space-y-6">
+            <h2 className="text-2xl font-bold flex items-center gap-2.5">
+              <ShieldCheck className="h-6 w-6 text-primary" aria-hidden="true" />
+              Alur Singkat Pengajuan KPR
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                { title: "1. Pengajuan", desc: "Menyerahkan dokumen & verifikasi skor kredit." },
+                { title: "2. Persetujuan", desc: "Bank menyetujui plafon & suku bunga (SP3K)." },
+                { title: "3. Akad Kredit", desc: "Penandatanganan resmi & serah terima hunian." },
+              ].map((step) => (
+                <Card key={step.title} className="p-5 border shadow-sm bg-card space-y-2">
+                  <h3 className="font-bold text-sm">{step.title}</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+                </Card>
+              ))}
+            </div>
+
+            <Card className="border shadow-sm bg-muted/40 p-7 sm:p-8">
+              <div className="space-y-4">
+                <h2 className="text-xl font-bold text-foreground">Tips Cerdas Mengambil KPR</h2>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-muted-foreground leading-relaxed">
+                  <li className="flex gap-3">
+                    <span className="mt-0.5 h-5 w-5 rounded-full bg-primary/15 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                      1
+                    </span>
+                    Uji cicilan dengan bunga floating 12–14% untuk melihat batas aman Anda.
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-0.5 h-5 w-5 rounded-full bg-primary/15 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                      2
+                    </span>
+                    Jaga total cicilan maksimal 30–35% dari penghasilan bersih bulanan.
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-0.5 h-5 w-5 rounded-full bg-primary/15 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                      3
+                    </span>
+                    Siapkan dana darurat minimal 6× cicilan sebelum akad kredit.
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-0.5 h-5 w-5 rounded-full bg-primary/15 text-primary flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                      4
+                    </span>
+                    Evaluasi bunga floating berkala dan pertimbangkan take over jika perlu.
+                  </li>
+                </ul>
+              </div>
+            </Card>
+          </div>
+
+          <Card className="border shadow-sm bg-card p-6 space-y-6">
+            <h2 className="text-lg font-bold flex items-center gap-2.5">
+              <ClipboardCheck className="h-5 w-5 text-primary" aria-hidden="true" />
+              Persyaratan Umum
+            </h2>
+            <div className="space-y-5">
+              <div className="space-y-2.5">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-primary">
+                  Kriteria Pemohon
+                </p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  {[
+                    "Warga Negara Indonesia (WNI)",
+                    "Usia minimal 21 tahun",
+                    "Karyawan tetap min. 2 tahun",
+                    "Penghasilan stabil",
+                  ].map((item) => (
+                    <li key={item} className="flex gap-2.5">
+                      <CheckCircle2
+                        className="h-4 w-4 text-primary flex-shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="space-y-2.5 pt-4 border-t">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-primary">
+                  Dokumen Utama
+                </p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  {[
+                    "KTP, KK, & NPWP",
+                    "Slip Gaji 3 bulan terakhir",
+                    "Rekening Koran 3–6 bulan",
+                    "Surat Keterangan Kerja (SKK)",
+                  ].map((item) => (
+                    <li key={item} className="flex gap-2.5">
+                      <CheckCircle2
+                        className="h-4 w-4 text-primary flex-shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <p className="text-[11px] text-muted-foreground italic">
+              *Kebijakan detail dokumen dapat berbeda di setiap bank.
+            </p>
+          </Card>
+        </div>
+      </div>
+    </section>
+  );
 }
